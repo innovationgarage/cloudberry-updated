@@ -28,12 +28,12 @@ TODO: ...
 ### Usage
 
 
-  # Start the daemon
-  ./updated.py
+    # Start the daemon
+    ./updated.py
 
-  # Stop the daemon
-  ./updated.py --action stop
+    # Stop the daemon
+    ./updated.py --action stop
 
-  # Restart the daemon
-  ./updated.py --action restart
+    # Restart the daemon
+    ./updated.py --action restart
 
