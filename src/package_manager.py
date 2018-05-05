@@ -1,17 +1,15 @@
 #!/usr/bin/env python3
 # Copyright 2018 Alexander Alemayhu https://alemayhu.com
 
-from src.models import Package
-
 opkg_path = "/bin/opkg"
 
 
-class opkg():
+class PackageManager:
 
     @staticmethod
     def dry_run(prefix: str, packages: []):
         """
-       Return a valid opkg command
+       Return a valid command
        :param prefix:
        :param packages:
        :return:
