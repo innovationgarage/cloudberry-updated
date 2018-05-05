@@ -17,5 +17,23 @@ TODO: ...
 
     config daemon 'daemon'
         option update_interval '10m'
-    config package_name 'package_name''
+        option working_directory '/var/lib/updated'
+        option log_file '/var/log/updated.log'
+        option pid_file '/var/run/updated.pid'
+    config package_name 'package_name'
         option version 'x.y'
+  
+  TODO: explain above configuration 
+
+### Usage
+
+
+  # Start the daemon
+  ./updated.py
+
+  # Stop the daemon
+  ./updated.py --action stop
+
+  # Restart the daemon
+  ./updated.py --action restart
+

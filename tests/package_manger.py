@@ -3,8 +3,8 @@
 
 import unittest
 
-from src.models import Package
-from src.package_manager import PackageManager, opkg_path
+from models import Package
+from package_manager import PackageManager, opkg_path
 
 
 class TestPackageMangerMethods(unittest.TestCase):
