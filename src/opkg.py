@@ -7,22 +7,21 @@ opkg_path = "/bin/opkg"
 
 
 class opkg():
+
     @staticmethod
-    def install_command(p: Package):
-        if p.version: return "{} install {}".format(opkg_path, p)
-
-        return "{} install {}".format(opkg_path, p)
-
-    @classmethod
-    def update_command(cls):
-        return "{} update".format(opkg_path)
-
-    @classmethod
-    def install_commands(cls, packages):
-        if len(packages) == 0:
+    def dry_run(prefix: str, packages: []):
+        """
+       Return a valid opkg command
+       :param prefix:
+       :param packages:
+       :return:
+       """
+        if not packages and len(packages) == 0:
+            if prefix == "update":
+                return "{} update".format(opkg_path)
             return ""
 
-        command = "{} install".format(opkg_path)
+        command = "{} {}".format(opkg_path, prefix)
         for p in packages:
             command += " {}".format(p)
         return command
