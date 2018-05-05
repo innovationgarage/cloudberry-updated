@@ -4,7 +4,7 @@
 import unittest
 
 from models import Package
-from package_manager import PackageManager, opkg_path
+from package_manager import PackageManager, package_manager_path
 
 
 class TestPackageMangerMethods(unittest.TestCase):
@@ -13,13 +13,13 @@ class TestPackageMangerMethods(unittest.TestCase):
         p = Package(name="tc")
 
         actual = PackageManager.dry_run("install", [p])
-        expected = "{} install tc".format(opkg_path)
+        expected = "{} install tc".format(package_manager_path)
 
         self.assertEqual(expected, actual)
 
     def test_update(self):
         actual = PackageManager.dry_run("update", [])
-        expected = "{} update".format(opkg_path)
+        expected = "{} update".format(package_manager_path)
 
         self.assertEqual(expected, actual)
 
@@ -27,14 +27,14 @@ class TestPackageMangerMethods(unittest.TestCase):
         p = Package(name="tc", version="4.14.0")
 
         actual = PackageManager.dry_run("install", [p])
-        expected = "{} install tc={}".format(opkg_path, "4.14.0")
+        expected = "{} install tc={}".format(package_manager_path, "4.14.0")
 
         self.assertEqual(expected, actual)
 
     def test_multiple_packages(self):
         packages = [Package(name="tc"), Package(name="bash")]
         actual = PackageManager.dry_run("install", packages)
-        expected = "{} install tc bash".format(opkg_path)
+        expected = "{} install tc bash".format(package_manager_path)
         self.assertEqual(expected, actual)
 
     def test_empty(self):
@@ -46,18 +46,18 @@ class TestPackageMangerMethods(unittest.TestCase):
         p = Package(name="tc")
 
         actual = PackageManager.dry_run("remove", [p])
-        expected = "{} remove tc".format(opkg_path)
+        expected = "{} remove tc".format(package_manager_path)
 
         self.assertEqual(expected, actual)
 
         packages = [Package(name="tc"), Package(name="bash")]
         actual = PackageManager.dry_run("remove", packages)
-        expected = "{} remove tc bash".format(opkg_path)
+        expected = "{} remove tc bash".format(package_manager_path)
         self.assertEqual(expected, actual)
 
     def test_update_only(self):
         actual = PackageManager.dry_run("update", [])
-        expected = "{} update".format(opkg_path)
+        expected = "{} update".format(package_manager_path)
 
         self.assertEqual(expected, actual)
 
