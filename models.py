@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-# Copyright 2018 Alexander Alemayhu https://alemayhu.com
 
 """
 Package is the internal representation used by the daemon for generating commands.
