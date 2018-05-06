@@ -16,7 +16,7 @@ endef
 
 define Package/updated
   $(Package/updated/default)
-  DEPENDS:=+python3
+  DEPENDS:=+python3 +python3-pip
 endef
 
 define Package/updated/description
