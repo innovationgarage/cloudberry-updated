@@ -10,12 +10,10 @@ class TestPackageMangerMethods(unittest.TestCase):
     def test_internal_repsentation(self):
         example = """
 {
-  "daemon": {
     "update_interval": "10",
     "working_directory": "/var/lib/updated",
     "log_file": "/var/log/updated.log",
     "pid_file": "/var/run/updated.pid"
-  }
 }
 """
         c = Configuration(example)
@@ -37,12 +35,10 @@ class TestPackageMangerMethods(unittest.TestCase):
 
         zero_update_interval = """
 {
-  "daemon": {
     "update_interval": "0",
     "working_directory": "/var/lib/updated",
     "log_file": "/var/log/updated.log",
     "pid_file": "/var/run/updated.pid"
-  }
 }
 """
         c = Configuration(zero_update_interval)
@@ -51,12 +47,10 @@ class TestPackageMangerMethods(unittest.TestCase):
 
         null_fields = """
 {
-  "daemon": {
     "update_interval": null,
     "working_directory": null,
     "log_file": null,
     "pid_file": null
-  }
 }
 """
         c = Configuration(null_fields)

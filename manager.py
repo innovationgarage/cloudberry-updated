@@ -8,6 +8,7 @@ import time
 
 import lockfile
 
+import util
 from config import Configuration
 from update_daemon import UpdateDaemon
 
@@ -34,7 +35,11 @@ class Manager:
         if os.path.exists(path + ".lock") \
                 or os.path.exists(path):
             pid = int(open(path, "r").read())
-            os.kill(pid, signal.SIGTERM)
+
+            try:
+                os.kill(pid, signal.SIGTERM)
+            except ProcessLookupError as e:
+                print("Failed to kill running daemon.\nReason: {}".format(e))
         else:
             print("No PID file found! Daemon might not be running?")
 
@@ -47,12 +52,7 @@ class Manager:
         :return: new configured update daemon.
         """
         print("Setting up daemon")
-        pwd = self.config.working_directory
-        if not os.path.exists(pwd):
-            os.mkdir(pwd, mode=0o775)
-            print("Creating working directory {}".format(pwd))
-
-        print("Working directory is {}".format(pwd))
+        util.create_working_directory(self.config.working_directory)
 
         locked_pid_file = lockfile.FileLock(self.config.pid_file, timeout=1)
 

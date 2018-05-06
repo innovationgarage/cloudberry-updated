@@ -7,6 +7,8 @@ import errno
 import json
 import os
 
+import util
+
 
 class Configuration:
     def __init__(self, conf=None, update_interval=10, working_directory="/var/lib/updated",
@@ -14,10 +16,10 @@ class Configuration:
         if conf:
             try:
                 c = json.loads(conf)
-                self.update_interval = float(c['daemon']['update_interval'])
-                self.working_directory = c['daemon']['working_directory']
-                self.log_file = c['daemon']['log_file']
-                self.pid_file = c['daemon']['pid_file']
+                self.update_interval = int(c['update_interval'])
+                self.working_directory = c['working_directory']
+                self.log_file = c['log_file']
+                self.pid_file = c['pid_file']
             except Exception as e:
                 print("Failed to load configuration\n{}".format(e))
                 self.update_interval = None
@@ -66,6 +68,7 @@ class Configuration:
 
         """
         try:
+            util.create_working_directory("/var/lib/updated")
             c = Configuration()
             with open(config_path, 'w') as outfile:
                 json.dump(c.to_json(), outfile)
@@ -75,5 +78,9 @@ class Configuration:
             exit(errno.EPERM)
 
     def to_json(self):
-        return json.dumps(self, default=lambda o: o.__dict__,
-                          sort_keys=True, indent=4)
+        return dict(
+            update_interval=self.update_interval,
+            working_directory=self.working_directory,
+            log_file=self.log_file,
+            pid_file=self.pid_file
+        )
