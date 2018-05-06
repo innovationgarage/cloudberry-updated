@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 # Copyright 2018 Alexander Alemayhu https://alemayhu.com
 import datetime
+import errno
 import os
 import signal
 import time
@@ -12,8 +13,6 @@ from update_daemon import UpdateDaemon
 
 
 class Manager:
-    config: Configuration
-
     def __init__(self, config_path: str) -> None:
         super().__init__()
         # Try loading the configuration file
@@ -56,14 +55,20 @@ class Manager:
         print("Working directory is {}".format(pwd))
 
         locked_pid_file = lockfile.FileLock(self.config.pid_file, timeout=1)
-        log_file = open(self.config.log_file, 'w+')
 
-        context = UpdateDaemon(log_file,locked_pid_file,self.config.working_directory)
-        context.signal_map = {
-            signal.SIGTERM: self.cleanup,
-            signal.SIGTSTP: self.cleanup,
-        }
-        return context
+        try:
+            log_file = open(self.config.log_file, 'w+')
+        except PermissionError as e:
+            print("Could not open log file file://{}\n{}", self.config.log_file, e)
+            self.remove_pid_file()
+            exit(errno.EPERM)
+        else:
+            context = UpdateDaemon(log_file,locked_pid_file,self.config.working_directory)
+            context.signal_map = {
+                signal.SIGTERM: self.cleanup,
+                signal.SIGTSTP: self.cleanup,
+            }
+            return context
 
     def start(self):
         """
@@ -88,9 +93,12 @@ class Manager:
         :return:
         """
         print("Shutting down signal={} frame={}".format(signum, frame))
+        self.remove_pid_file()
+        exit(0)
+
+    def remove_pid_file(self):
         path = self.config.pid_file
         os.remove(path)
-        exit(0)
 
     def write_pid_file(self):
         """

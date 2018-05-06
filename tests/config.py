@@ -49,6 +49,20 @@ class TestPackageMangerMethods(unittest.TestCase):
         self.assertIsNotNone(c)
         self.assertEqual(c.update_interval, 1)
 
+        null_fields = """
+{
+  "daemon": {
+    "update_interval": null,
+    "working_directory": null,
+    "log_file": null,
+    "pid_file": null
+  }
+}
+"""
+        c = Configuration(null_fields)
+        self.assertIsNotNone(c)
+        self.assertEqual(c.update_interval, 1)
+
 
     # TODO: test UCI format
 

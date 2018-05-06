@@ -8,13 +8,8 @@ import os
 
 
 class Configuration:
-    # Update interval in minutes
-    update_interval: float = 10
-    working_directory: str = "/var/lib/updated"
-    log_file: str = "/var/log/updated.log"
-    pid_file: str = "/var/run/updated.pid"
-
-    def __init__(self, conf=None) -> None:
+    def __init__(self, conf=None, update_interval=10, working_directory ="/var/lib/updated",
+                 log_file="/var/log/updated.log", pid_file="/var/run/updated.pid") -> None:
         try:
             c = json.loads(conf)
         except Exception as e:
@@ -24,13 +19,24 @@ class Configuration:
             self.log_file = None
             self.pid_file = None
         else:
-            self.update_interval = float(c['daemon']['update_interval'])
-            # Check that a minimum value is set or default to 1
-            if self.update_interval < 0.1:
-                self.update_interval = 1
-            self.working_directory = c['daemon']['working_directory']
-            self.log_file = c['daemon']['log_file']
-            self.pid_file = c['daemon']['pid_file']
+            # Handle user passing in bad values
+            try:
+                self.update_interval = float(c['daemon']['update_interval'])
+                self.working_directory = c['daemon']['working_directory']
+                self.log_file = c['daemon']['log_file']
+                self.pid_file = c['daemon']['pid_file']
+            except Exception as et:
+                print("Failed to use this configuration -> {}\nReason: {}".format(c, et))
+                self.update_interval = update_interval
+                self.working_directory = working_directory
+                self.log_file = log_file
+                self.pid_file = pid_file
+                print("Falling back to -> {}".format(self.to_json()))
+            else:
+                # Check that a minimum value is set or default to 1
+                if self.update_interval < 0.1:
+                    print("Interval value {} is too low setting it to 1\n".format(self.update_interval))
+                    self.update_interval = 1
 
     @classmethod
     def load(cls, config_path):
