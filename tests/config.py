@@ -63,7 +63,6 @@ class TestPackageMangerMethods(unittest.TestCase):
         self.assertIsNotNone(c)
         self.assertIsNone(c.update_interval)
 
-
     # TODO: test UCI format
 
 

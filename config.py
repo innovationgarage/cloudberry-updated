@@ -3,6 +3,7 @@
 """
 The internal configuration for the daemon is vanilla JSON.
 """
+import errno
 import json
 import os
 
@@ -35,7 +36,6 @@ class Configuration:
             print("Interval value {} is too low setting it to 1\n".format(self.update_interval))
             self.update_interval = 1
 
-
     @classmethod
     def load(cls, config_path):
         """
@@ -63,12 +63,16 @@ class Configuration:
         """
         Use the default values but also save the configuration for the user to make changes.
         :return:
-        """
-        c = Configuration()
-        with open(config_path, 'w') as outfile:
-            json.dump(c.to_json(), outfile)
 
-        return c
+        """
+        try:
+            c = Configuration()
+            with open(config_path, 'w') as outfile:
+                json.dump(c.to_json(), outfile)
+            return c
+        except PermissionError as e:
+            print("Could not open configuration file.\nReason: {}".format(e))
+            exit(errno.EPERM)
 
     def to_json(self):
         return json.dumps(self, default=lambda o: o.__dict__,

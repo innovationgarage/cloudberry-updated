@@ -58,17 +58,16 @@ class Manager:
 
         try:
             log_file = open(self.config.log_file, 'w+')
-        except PermissionError as e:
-            print("Could not open log file file://{}\n{}", self.config.log_file, e)
-            self.remove_pid_file()
-            exit(errno.EPERM)
-        else:
-            context = UpdateDaemon(log_file,locked_pid_file,self.config.working_directory)
+            context = UpdateDaemon(log_file, locked_pid_file, self.config.working_directory)
             context.signal_map = {
                 signal.SIGTERM: self.cleanup,
                 signal.SIGTSTP: self.cleanup,
             }
             return context
+        except PermissionError as e:
+            print("Could not open log file file://{}\n{}", self.config.log_file, e)
+            self.remove_pid_file()
+            exit(errno.EPERM)
 
     def start(self):
         """
