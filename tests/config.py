@@ -10,6 +10,7 @@ class TestPackageMangerMethods(unittest.TestCase):
     def test_internal_repsentation(self):
         example = """
 {
+    "version": "0.0.1",
     "update_interval": "10",
     "working_directory": "/var/lib/updated",
     "log_file": "/var/log/updated.log",
@@ -23,6 +24,7 @@ class TestPackageMangerMethods(unittest.TestCase):
         self.assertEqual("/var/lib/updated", c.working_directory)
         self.assertEqual("/var/log/updated.log", c.log_file)
         self.assertEqual("/var/run/updated.pid", c.pid_file)
+        self.assertEqual("0.0.1", c.version)
 
     def test_invalid_configuration(self):
         c = Configuration("""
@@ -35,6 +37,7 @@ class TestPackageMangerMethods(unittest.TestCase):
 
         zero_update_interval = """
 {
+    "version": "0.0.1",
     "update_interval": "0",
     "working_directory": "/var/lib/updated",
     "log_file": "/var/log/updated.log",
@@ -47,6 +50,7 @@ class TestPackageMangerMethods(unittest.TestCase):
 
         null_fields = """
 {
+    "version": null,
     "update_interval": null,
     "working_directory": null,
     "log_file": null,

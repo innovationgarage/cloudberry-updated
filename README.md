@@ -20,6 +20,7 @@ TODO: ...
         option working_directory '/var/lib/updated'
         option log_file '/var/log/updated.log'
         option pid_file '/var/run/updated.pid'
+        option version '0.0.1'
     config package_name 'package_name'
         option version 'x.y'
   

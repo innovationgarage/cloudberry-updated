@@ -8,6 +8,7 @@ import json
 import os
 
 import util
+import version
 
 
 class Configuration:
@@ -20,18 +21,22 @@ class Configuration:
                 self.working_directory = c['working_directory']
                 self.log_file = c['log_file']
                 self.pid_file = c['pid_file']
+                self.version = c['version']
+                # TODO: compare internal version
             except Exception as e:
                 print("Failed to load configuration\n{}".format(e))
                 self.update_interval = None
                 self.working_directory = None
                 self.log_file = None
                 self.pid_file = None
+                self.version = None
                 return
         else:
             self.update_interval = update_interval
             self.working_directory = working_directory
             self.log_file = log_file
             self.pid_file = pid_file
+            self.version = version.CURRENT
 
         # Check that a minimum value is set or default to 1
         if self.update_interval < 0.1:
@@ -55,7 +60,8 @@ class Configuration:
         if self.update_interval is None or \
                 self.working_directory is None or \
                 self.log_file is None or \
-                self.pid_file is None:
+                self.pid_file is None or \
+                self.version is None:
             return False
 
         return True
@@ -82,5 +88,6 @@ class Configuration:
             update_interval=self.update_interval,
             working_directory=self.working_directory,
             log_file=self.log_file,
-            pid_file=self.pid_file
+            pid_file=self.pid_file,
+            version=self.version
         )
