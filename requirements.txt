@@ -1,2 +1,2 @@
-lockfile
-python-daemon=2.1.2
+lockfile==0.12.2
+python-daemon==2.1.2
