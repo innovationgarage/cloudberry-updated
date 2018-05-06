@@ -25,6 +25,9 @@ class Configuration:
             self.pid_file = None
         else:
             self.update_interval = float(c['daemon']['update_interval'])
+            # Check that a minimum value is set or default to 1
+            if self.update_interval < 0.1:
+                self.update_interval = 1
             self.working_directory = c['daemon']['working_directory']
             self.log_file = c['daemon']['log_file']
             self.pid_file = c['daemon']['pid_file']

@@ -35,6 +35,21 @@ class TestPackageMangerMethods(unittest.TestCase):
         self.assertIsNone(c.log_file)
         self.assertIsNone(c.pid_file)
 
+        zero_update_interval = """
+{
+  "daemon": {
+    "update_interval": "0",
+    "working_directory": "/var/lib/updated",
+    "log_file": "/var/log/updated.log",
+    "pid_file": "/var/run/updated.pid"
+  }
+}
+"""
+        c = Configuration(zero_update_interval)
+        self.assertIsNotNone(c)
+        self.assertEqual(c.update_interval, 1)
+
+
     # TODO: test UCI format
 
 
