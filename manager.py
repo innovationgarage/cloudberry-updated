@@ -3,13 +3,11 @@ import datetime
 import errno
 import os
 import signal
+import sys
 import time
-
-import lockfile
 
 import util
 from config import Configuration
-from update_daemon import UpdateDaemon
 
 
 class Manager:
@@ -45,28 +43,23 @@ class Manager:
         if not restart:
             exit(0)
 
-    def setup_context(self):
+    def setup(self):
         """
         Perform any necessary setup for the daemon.
         :return: new configured update daemon.
         """
-        print("Setting up daemon")
         util.create_working_directory(self.config.working_directory)
-
-        locked_pid_file = lockfile.FileLock(self.config.pid_file, timeout=1)
-
         try:
-            log_file = open(self.config.log_file, 'w+')
-            context = UpdateDaemon(log_file, locked_pid_file, self.config.working_directory)
-            context.signal_map = {
-                signal.SIGTERM: self.cleanup,
-                signal.SIGTSTP: self.cleanup,
-            }
-            return context
+            sys.stdout = open(self.config.log_file, 'w+')
+            print("Setting up daemon")
+            os.chdir(self.config.working_directory)
+            signal.signal(signal.SIGTERM, self.cleanup)
+            signal.signal(signal.SIGTSTP, self.cleanup)
         except PermissionError as e:
             print("Could not open log file file://{}\n{}", self.config.log_file, e)
             self.remove_pid_file()
             exit(errno.EPERM)
+        self.write_pid_file()
 
     def start(self):
         """
@@ -74,14 +67,14 @@ class Manager:
         :return:
         """
 
-        context = self.setup_context()
-        context.open()
-        with context:
-            print("Entering daemon context pid={}".format(os.getpid()))
-            self.write_pid_file()
-            while True:
-                print("{}: :)".format(datetime.datetime.now()))
-                time.sleep(self.config.update_interval * 60)
+        self.setup()
+        while True:
+            sys.stdout.flush()
+            print("{}: :)".format(datetime.datetime.now()))
+            time.sleep(self.config.update_interval * 60)
+            # TODO: check for package changes.
+            # TODO: Install missing ones.
+            # TODO: What todo when there is a version mismatch?
 
     def cleanup(self, signum, frame):
         """
