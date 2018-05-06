@@ -27,6 +27,8 @@ endef
 
 define Package/updated/install
 	$(CP) ./files/* $(1)/
+	./scripts/build.sh
+	$(INSTALL_BIN) ./updated /bin/updated
 endef
 
 define Build/Compile
