@@ -61,7 +61,7 @@ class TestPackageMangerMethods(unittest.TestCase):
 """
         c = Configuration(null_fields)
         self.assertIsNotNone(c)
-        self.assertEqual(c.update_interval, 1)
+        self.assertIsNone(c.update_interval)
 
 
     # TODO: test UCI format
