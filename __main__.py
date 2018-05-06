@@ -17,7 +17,7 @@ def main(args):
 
 
 if __name__ == '__main__':
-    main(cli.run().args)
+    main(cli.run())
 
 """
 TODO: Handle UCI file parsing from python

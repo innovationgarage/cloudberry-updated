@@ -20,7 +20,7 @@ class Manager:
         self.config = Configuration.load(config_path)
         if not self.config or not self.config.isValid():
             # Use the default values
-            self.config = Configuration.useDefault()
+            self.config = Configuration.useDefault(config_path)
 
     def stop(self, restart=False):
         """
@@ -58,7 +58,7 @@ class Manager:
         locked_pid_file = lockfile.FileLock(self.config.pid_file, timeout=1)
         log_file = open(self.config.log_file, 'w+')
 
-        context = UpdateDaemon(log_file, locked_pid_file)
+        context = UpdateDaemon(log_file,locked_pid_file,self.config.working_directory)
         context.signal_map = {
             signal.SIGTERM: self.cleanup,
             signal.SIGTSTP: self.cleanup,

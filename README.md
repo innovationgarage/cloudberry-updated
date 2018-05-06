@@ -29,11 +29,11 @@ TODO: ...
 
 
     # Start the daemon
-    ./updated.py
+    ./updated
 
     # Stop the daemon
-    ./updated.py --action stop
+    ./updated --action stop
 
     # Restart the daemon
-    ./updated.py --action restart
+    ./updated --action restart
 

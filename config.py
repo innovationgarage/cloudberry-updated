@@ -52,13 +52,13 @@ class Configuration:
         return True
 
     @classmethod
-    def useDefault(cls):
+    def useDefault(cls, config_path: str):
         """
         Use the default values but also save the configuration for the user to make changes.
         :return:
         """
         c = Configuration()
-        with open(c.working_directory, 'w') as outfile:
+        with open(config_path, 'w') as outfile:
             json.dump(c.to_json(), outfile)
 
         return c
