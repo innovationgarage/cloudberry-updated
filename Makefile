@@ -26,13 +26,15 @@ define Package/updated/description
 endef
 
 define Package/updated/install
-	$(CP) ./files/* $(1)/
-	./scripts/build.sh
-	$(INSTALL_BIN) ./updated $(1)/bin/updated
+	$(INSTALL_DIR) $(1)/bin
+	$(INSTALL_BIN) $(PKG_BUILD_DIR)/updated $(1)/bin/updated
 endef
 
 define Build/Compile
-	true
+	zip -r $(PKG_BUILD_DIR)/updated *.py
+	echo '#!/usr/bin/env python3' | cat - $(PKG_BUILD_DIR)/updated.zip > $(PKG_BUILD_DIR)/updated
+	chmod +x $(PKG_BUILD_DIR)/updated
+	rm $(PKG_BUILD_DIR)/updated.zip
 endef
 
 $(eval $(call BuildPackage,updated))
