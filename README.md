@@ -16,7 +16,7 @@ TODO: ...
 ## Example configuration
 
     config daemon 'daemon'
-        option update_interval '10m'
+        option update_interval '10'
         option working_directory '/var/lib/updated'
         option log_file '/var/log/updated.log'
         option pid_file '/var/run/updated.pid'

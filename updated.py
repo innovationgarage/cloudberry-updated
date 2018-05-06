@@ -4,18 +4,20 @@ import cli
 import manager
 
 
-def main(action):
+def main(args):
+    action = args.action
+    m = manager.Manager(args.config)
     if action == "stop":
-        manager.stop()
+        m.stop()
     elif action == "restart":
-        manager.stop(restart=True)
-        manager.start()
+        m.stop(restart=True)
+        m.start()
     else:
-        manager.start()
+        m.start()
 
 
 if __name__ == '__main__':
-    main(cli.run().args.action)
+    main(cli.run().args)
 
 """
 TODO: Handle UCI file parsing from python
