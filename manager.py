@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-# Copyright 2018 Alexander Alemayhu https://alemayhu.com
 import datetime
 import errno
 import os
