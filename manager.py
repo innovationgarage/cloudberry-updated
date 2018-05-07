@@ -6,11 +6,14 @@ import signal
 import sys
 import time
 
+import package_manager
 import util
 from config import Configuration
 
 
 # TODO: handle stale pid
+
+
 class Manager:
     def __init__(self, config_path: str) -> None:
         super().__init__()
@@ -69,6 +72,9 @@ class Manager:
         """
 
         self.setup()
+        self.main_event_loop()
+
+    def main_event_loop(self):
         while True:
             sys.stdout.flush()
             util.log("{}: :)".format(datetime.datetime.now()))
@@ -76,6 +82,7 @@ class Manager:
             # TODO: check for package changes.
             # TODO: Install missing ones.
             # TODO: What todo when there is a version mismatch?
+            package_manager.update(stdout=sys.stdout)
 
     def cleanup(self, signum, frame):
         """
