@@ -9,6 +9,7 @@ import os
 
 import util
 import version
+import package_manager
 
 
 class Configuration:
@@ -22,6 +23,7 @@ class Configuration:
                 self.log_file = c['log_file']
                 self.pid_file = c['pid_file']
                 self.version = c['version']
+                self.package_manager_path = c['package_manager_path']
                 # TODO: compare internal version
             except Exception as e:
                 util.log("Failed to load configuration\n{}".format(e))
@@ -30,6 +32,7 @@ class Configuration:
                 self.log_file = None
                 self.pid_file = None
                 self.version = None
+                self.package_manager_path = None
                 return
         else:
             self.update_interval = update_interval
@@ -37,6 +40,7 @@ class Configuration:
             self.log_file = log_file
             self.pid_file = pid_file
             self.version = version.CURRENT
+            self.package_manager_path = package_manager.package_manager_path
 
         # Check that a minimum value is set or default to 1
         if self.update_interval < 0.1:
@@ -61,7 +65,8 @@ class Configuration:
                 self.working_directory is None or \
                 self.log_file is None or \
                 self.pid_file is None or \
-                self.version is None:
+                self.version is None or \
+                self.package_manager_path is None:
             return False
 
         return True
@@ -89,5 +94,6 @@ class Configuration:
             working_directory=self.working_directory,
             log_file=self.log_file,
             pid_file=self.pid_file,
-            version=self.version
+            version=self.version,
+            package_manager_path=self.package_manager_path
         )

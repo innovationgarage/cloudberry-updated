@@ -3,5 +3,6 @@
   "update_interval": "1",
   "working_directory": "/tmp/updated",
   "log_file": "/tmp/updated/updated.log",
-  "pid_file": "/tmp/updated/updated.pid"
+  "pid_file": "/tmp/updated/updated.pid",
+  "package_manager_path": "/usr/local/bin/brew"
 }

@@ -14,7 +14,8 @@ class TestPackageMangerMethods(unittest.TestCase):
     "update_interval": "10",
     "working_directory": "/var/lib/updated",
     "log_file": "/var/log/updated.log",
-    "pid_file": "/var/run/updated.pid"
+    "pid_file": "/var/run/updated.pid",
+    "package_manager_path": "/bin/opkg"
 }
 """
         c = Configuration(example)
@@ -25,6 +26,7 @@ class TestPackageMangerMethods(unittest.TestCase):
         self.assertEqual("/var/log/updated.log", c.log_file)
         self.assertEqual("/var/run/updated.pid", c.pid_file)
         self.assertEqual("0.0.1", c.version)
+        self.assertEqual("/bin/opkg", c.package_manager_path)
 
     def test_invalid_configuration(self):
         c = Configuration("""
@@ -41,7 +43,8 @@ class TestPackageMangerMethods(unittest.TestCase):
     "update_interval": "0",
     "working_directory": "/var/lib/updated",
     "log_file": "/var/log/updated.log",
-    "pid_file": "/var/run/updated.pid"
+    "pid_file": "/var/run/updated.pid",
+    "package_manager_path": "/bin/opkg"
 }
 """
         c = Configuration(zero_update_interval)
@@ -54,7 +57,8 @@ class TestPackageMangerMethods(unittest.TestCase):
     "update_interval": null,
     "working_directory": null,
     "log_file": null,
-    "pid_file": null
+    "pid_file": null,
+    "package_manager_path": "null"
 }
 """
         c = Configuration(null_fields)
