@@ -57,7 +57,7 @@ class Manager:
             signal.signal(signal.SIGTERM, self.cleanup)
             signal.signal(signal.SIGTSTP, self.cleanup)
         except PermissionError as e:
-            util.log("Could not open log file file://{}\n{}", self.config.log_file, e)
+            util.log("Could not open log file file://{}\n{}".format(self.config.log_file, e))
             self.remove_pid_file()
             exit(errno.EPERM)
         self.write_pid_file()
