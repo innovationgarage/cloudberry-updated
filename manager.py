@@ -10,6 +10,7 @@ import util
 from config import Configuration
 
 
+# TODO: handle stale pid
 class Manager:
     def __init__(self, config_path: str) -> None:
         super().__init__()
