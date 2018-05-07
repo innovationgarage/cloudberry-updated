@@ -40,7 +40,7 @@ class Configuration:
             self.log_file = log_file
             self.pid_file = pid_file
             self.version = version.CURRENT
-            self.package_manager_path = package_manager.package_manager_path
+            self.package_manager_path = "/bin/opkg"
 
         # Check that a minimum value is set or default to 1
         if self.update_interval < 0.1:

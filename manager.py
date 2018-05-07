@@ -19,6 +19,7 @@ class Manager:
         super().__init__()
         # Try loading the configuration file
         self.config = Configuration.load(config_path)
+        self.pm = package_manager.PackageManager(self.config.package_manager_path)
         if not self.config or not self.config.isValid():
             # Use the default values
             self.config = Configuration.useDefault(config_path)
@@ -83,7 +84,7 @@ class Manager:
             # TODO: Install missing ones.
             # TODO: What todo when there is a version mismatch?
             # TODO: check OpenWisp feed file and if does not match /etc/opkg/customfeeds.conf
-            package_manager.update(stdout=sys.stdout)
+            self.pm.update(stdout=sys.stdout)
 
     def cleanup(self, signum, frame):
         """
