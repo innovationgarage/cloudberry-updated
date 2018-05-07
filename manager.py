@@ -82,6 +82,7 @@ class Manager:
             # TODO: check for package changes.
             # TODO: Install missing ones.
             # TODO: What todo when there is a version mismatch?
+            # TODO: check OpenWisp feed file and if does not match /etc/opkg/customfeeds.conf
             package_manager.update(stdout=sys.stdout)
 
     def cleanup(self, signum, frame):
