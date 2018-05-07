@@ -36,9 +36,9 @@ class Manager:
             try:
                 os.kill(pid, signal.SIGTERM)
             except ProcessLookupError as e:
-                print("Failed to kill running daemon.\nReason: {}".format(e))
+                util.log("Failed to kill running daemon.\nReason: {}".format(e))
         else:
-            print("No PID file found! Daemon might not be running?")
+            util.log("No PID file found! Daemon might not be running?")
 
         if not restart:
             exit(0)
@@ -51,12 +51,12 @@ class Manager:
         util.create_working_directory(self.config.working_directory)
         try:
             sys.stdout = open(self.config.log_file, 'w+')
-            print("Setting up daemon")
+            util.log("Setting up daemon")
             os.chdir(self.config.working_directory)
             signal.signal(signal.SIGTERM, self.cleanup)
             signal.signal(signal.SIGTSTP, self.cleanup)
         except PermissionError as e:
-            print("Could not open log file file://{}\n{}", self.config.log_file, e)
+            util.log("Could not open log file file://{}\n{}", self.config.log_file, e)
             self.remove_pid_file()
             exit(errno.EPERM)
         self.write_pid_file()
@@ -70,7 +70,7 @@ class Manager:
         self.setup()
         while True:
             sys.stdout.flush()
-            print("{}: :)".format(datetime.datetime.now()))
+            util.log("{}: :)".format(datetime.datetime.now()))
             time.sleep(self.config.update_interval * 60)
             # TODO: check for package changes.
             # TODO: Install missing ones.
@@ -83,7 +83,7 @@ class Manager:
         :param frame:
         :return:
         """
-        print("Shutting down signal={} frame={}".format(signum, frame))
+        util.log("Shutting down signal={} frame={}".format(signum, frame))
         self.remove_pid_file()
         exit(0)
 

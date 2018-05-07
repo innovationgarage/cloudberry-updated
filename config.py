@@ -24,7 +24,7 @@ class Configuration:
                 self.version = c['version']
                 # TODO: compare internal version
             except Exception as e:
-                print("Failed to load configuration\n{}".format(e))
+                util.log("Failed to load configuration\n{}".format(e))
                 self.update_interval = None
                 self.working_directory = None
                 self.log_file = None
@@ -40,7 +40,7 @@ class Configuration:
 
         # Check that a minimum value is set or default to 1
         if self.update_interval < 0.1:
-            print("Interval value {} is too low setting it to 1\n".format(self.update_interval))
+            util.log("Interval value {} is too low setting it to 1\n".format(self.update_interval))
             self.update_interval = 1
 
     @classmethod
@@ -80,7 +80,7 @@ class Configuration:
                 json.dump(c.to_json(), outfile)
             return c
         except PermissionError as e:
-            print("Could not open configuration file.\nReason: {}".format(e))
+            util.log("Could not open configuration file.\nReason: {}".format(e))
             exit(errno.EPERM)
 
     def to_json(self):
