@@ -23,6 +23,12 @@ class TestPackageMangerMethods(unittest.TestCase):
 
         self.assertEqual(expected, actual)
 
+    def test_upgrade(self):
+        actual = PackageManager.dry_run("upgrade", [])
+        expected = "{} upgrade".format(package_manager_path)
+
+        self.assertEqual(expected, actual)
+
     def test_install_version(self):
         p = Package(name="tc", version="4.14.0")
 

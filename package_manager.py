@@ -15,8 +15,8 @@ class PackageManager:
        :return:
        """
         if not packages and len(packages) == 0:
-            if prefix == "update":
-                return "{} update".format(package_manager_path)
+            if prefix == "update" or prefix == "upgrade":
+                return "{} {}".format(package_manager_path, prefix)
             return ""
 
         command = "{} {}".format(package_manager_path, prefix)
