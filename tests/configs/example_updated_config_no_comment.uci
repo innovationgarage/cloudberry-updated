@@ -1,7 +1,25 @@
-config 'updated'
-    option 'update_interval' 10
-    option 'update_interval' 10
-    option 'working_directory' '/var/lib/updated'
-    option 'log_file' '/var/log/updated.log'
-    option 'pid_file' '/var/run/updated.pid'
-    option 'version' '0.0.1'
+config updated
+    option update_interval '10'
+    option update_interval '10'
+    option working_directory '/var/lib/updated'
+    option log_file '/var/log/updated.log'
+    option pid_file '/var/run/updated.pid'
+    option version '0.0.1'
+
+config feeds 'customfeeds'
+   config packages 'packages'
+        option type 'src-git'
+        option location 'https://github.com/openwrt/packages.git'
+   config xwrt 'xwrt'
+        option type 'src-svn'
+        option location 'http://x-wrt.googlecode.com/svn/trunk/package'
+   config custom 'custom'
+        option type 'src-link'
+        option location '/usr/src/openwrt/custom-feed'
+
+config packages 'packages'
+   config bash 'bash'
+        option version '3.2.57'
+        option state 'installed'
+   config iptables 'iptables'
+        option state 'installed'
