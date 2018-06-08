@@ -29,8 +29,8 @@ The feeds file has a list off all the custom feeds and packages shows the packag
 
 ## Example configuration
 
-    # /etc/config/updated/daemon
-    config daemon 'daemon'
+    # /etc/config/updated
+    config updated
         option update_interval '10'
         option working_directory '/var/lib/updated'
         option log_file '/var/log/updated.log'

@@ -6,6 +6,9 @@ The internal configuration for the daemon is vanilla JSON.
 import errno
 import json
 import os
+from collections import OrderedDict
+
+import netjsonconfig
 
 import util
 import version
@@ -97,3 +100,24 @@ class Configuration:
             version=self.version,
             package_manager_path=self.package_manager_path
         )
+
+    @classmethod
+    def useUCI(cls, config_path: str):
+        """
+        Try using UCI configuration format.
+        :return:
+
+        """
+        c = Configuration()
+        config_file = open(config_path, 'r').read()
+        parser = netjsonconfig.OpenWrt.parser(config=config_file)
+        data = parser.parse_text(config=config_file)
+        key = list(data.keys())[0]
+        v = data[key][0]
+
+        c.update_interval = v['update_interval']
+        c.working_directory = v['working_directory']
+        c.log_file = v['log_file']
+        c.pid_file = v['pid_file']
+
+        return c
