@@ -15,6 +15,8 @@ updated receives it's configuration from `/etc/config/updated`.  The
 configuration file has the following structure
 
     # Daemon
+    package 'updated'
+
     config updated
         option update_interval '10'
         option working_directory '/var/lib/updated'
@@ -22,27 +24,6 @@ configuration file has the following structure
         option pid_file '/var/run/updated.pid'
         option version '0.0.1'
         
-        
-    # Package feeds
-    config feeds 'customfeeds'
-       config packages 'packages'
-            option type 'src-git' 
-            option location 'https://github.com/openwrt/packages.git'
-       config xwrt 'xwrt'
-            option type 'src-svn' 
-            option location 'http://x-wrt.googlecode.com/svn/trunk/package'
-       config custom 'custom' 
-            option type 'src-link' 
-            option location '/usr/src/openwrt/custom-feed'
-    
-    # Packages
-    config packages 'packages'
-       config bash 'bash'
-            option version '3.2.57'
-            option state 'installed'
-       config iptables 'iptables'
-            option state 'installed'
-
 The daemon section has all of the configuration specific for how updated is
 supposed to run.  The feeds section has a list off all the custom feeds and
 packages shows the packages to be installed.
