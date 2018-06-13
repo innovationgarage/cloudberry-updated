@@ -14,39 +14,9 @@ import version
 
 
 class Configuration:
-    def __init__(self, conf=None, update_interval=10, working_directory="/etc/updated",
-                 log_file="/var/log/updated.log", pid_file="/var/run/updated.pid") -> None:
-        if conf:
-            try:
-                c = json.loads(conf)
-                self.update_interval = int(c['update_interval'])
-                self.working_directory = c['working_directory']
-                self.log_file = c['log_file']
-                self.pid_file = c['pid_file']
-                self.version = c['version']
-                self.package_manager_path = c['package_manager_path']
-                # TODO: compare internal version
-            except Exception as e:
-                util.log("Failed to load configuration\n{}".format(e))
-                self.update_interval = None
-                self.working_directory = None
-                self.log_file = None
-                self.pid_file = None
-                self.version = None
-                self.package_manager_path = None
-                return
-        else:
-            self.update_interval = update_interval
-            self.working_directory = working_directory
-            self.log_file = log_file
-            self.pid_file = pid_file
-            self.version = version.CURRENT
-            self.package_manager_path = "/bin/opkg"
 
-        # Check that a minimum value is set or default to 1
-        if self.update_interval < 0.1:
-            util.log("Interval value {} is too low setting it to 1\n".format(self.update_interval))
-            self.update_interval = 1
+    def __init__(self) -> None:
+        self.version = "0.0.1"
 
     @classmethod
     def load(cls, config_path):
@@ -58,8 +28,7 @@ class Configuration:
         if not os.path.exists(config_path):
             return None
 
-        config_file = open(config_path, "r").read()
-        return Configuration(config_file)
+        return cls.useUCI(config_path)
 
     def isValid(self) -> bool:
         if self.update_interval is None or \
@@ -84,6 +53,10 @@ class Configuration:
             c = Configuration()
             with open(config_path, 'w') as outfile:
                 json.dump(c.to_json(), outfile)
+            # Check that a minimum value is set or default to 1
+            if c.update_interval < 0.1:
+                util.log("Interval value {} is too low setting it to 1\n".format(c.update_interval))
+                c.update_interval = 1
             return c
         except PermissionError as e:
             util.log("Could not open configuration file.\nReason: {}".format(e))
@@ -112,7 +85,7 @@ class Configuration:
         data = parser.parse_text(config=config_file)
         v = data["\'updated\'"][0]
 
-        c.update_interval = v['update_interval']
+        c.update_interval = int(v['update_interval'])
         c.working_directory = v['working_directory']
         c.log_file = v['log_file']
         c.pid_file = v['pid_file']

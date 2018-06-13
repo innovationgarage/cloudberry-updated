@@ -73,6 +73,16 @@ class TestPackageMangerMethods(unittest.TestCase):
 
         self.assertEqual(expected, actual)
 
+    def test_list_installed(self):
+        opkg_output = """
+nano - 2.7.5-1
+opkg - 2017-03-23-1d0263bb-1
+        """
+        expected = {'nano': '2.7.5-1', 'opkg': '2017-03-23-1d0263bb-1'}
+        actual = self.pm.list_installed_to_dict(opkg_output)
+
+        self.assertEqual(expected, actual)
+
 
 if __name__ == '__main__':
     unittest.main()

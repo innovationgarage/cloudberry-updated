@@ -15,14 +15,20 @@ from config import Configuration
 
 
 class Manager:
+    our_packages = {}
+
     def __init__(self, config_path: str) -> None:
         super().__init__()
-        # Try loading the configuration file
+
         self.config = Configuration.load(config_path)
+        if not self.config:
+            util.log("Error found no configuration")
+            exit(1)
+        self.config.package_manager_path = "/bin/opkg"
         self.pm = package_manager.PackageManager(self.config.package_manager_path)
         if not self.config or not self.config.isValid():
-            # Use the default values
-            self.config = Configuration.useDefault(config_path)
+            util.log("Error invalid configuration")
+            exit(1)
 
     def stop(self, restart=False):
         """
@@ -65,6 +71,7 @@ class Manager:
             self.remove_pid_file()
             exit(errno.EPERM)
         self.write_pid_file()
+        self.load_packages_list()
 
     def start(self):
         """
@@ -76,12 +83,24 @@ class Manager:
         self.main_event_loop()
 
     def main_event_loop(self):
+        util.log("Entering main event loop")
         while True:
             sys.stdout.flush()
             util.log("{}: :)".format(datetime.datetime.now()))
-            time.sleep(self.config.update_interval * 60)
+            time.sleep(self.config.update_interval * 1)
+
+            # TODO: optimize and only load on changes event
+            self.load_packages_list()
+            installed_packages = self.pm.run_list_installed(stdout=sys.stdout)
+            if len(installed_packages) != 0:
+                for key in self.our_packages:
+                    if not key in installed_packages:
+                        util.log("KEY={}".format(key))
+                        exit_code = self.pm.run_install(packages=[key], stdout=sys.stdout)
+                        if exit_code != 0:
+                            util.log("Error: Got bad exit({}) while installing {}".format(exit_code, key))
+
             # TODO: check for package changes.
-            # TODO: Install missing ones.
             # TODO: What todo when there is a version mismatch?
             # TODO: check OpenWisp feed file and if does not match /etc/opkg/customfeeds.conf
             self.pm.update(stdout=sys.stdout)
@@ -108,3 +127,12 @@ class Manager:
         """
         pid_file = open(self.config.pid_file, "w")
         pid_file.write(str(os.getpid()))
+
+    def load_packages_list(self):
+        path = os.path.join(self.config.working_directory, "packages")
+        packages_file = open(path, "r")
+        contents = packages_file.read()
+        if len(contents) == 0:
+            util.log("Warning empty packages file at ".format(path))
+            return
+        self.our_packages = self.pm.list_installed_to_dict(contents)
