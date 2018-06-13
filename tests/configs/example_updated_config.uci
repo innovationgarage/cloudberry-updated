@@ -1,5 +1,7 @@
 # /etc/config/updated
 # Daemon
+package 'updated'
+
 config updated
     option update_interval '10'
     option working_directory '/var/lib/updated'

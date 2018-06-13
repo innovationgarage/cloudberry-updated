@@ -1,3 +1,5 @@
+package 'updated'
+
 config updated
     option update_interval '10'
     option update_interval '10'

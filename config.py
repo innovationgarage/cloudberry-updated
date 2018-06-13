@@ -112,8 +112,7 @@ class Configuration:
         config_file = open(config_path, 'r').read()
         parser = netjsonconfig.OpenWrt.parser(config=config_file)
         data = parser.parse_text(config=config_file)
-        key = list(data.keys())[0]
-        v = data[key][0]
+        v = data["\'updated\'"][0]
 
         c.update_interval = v['update_interval']
         c.working_directory = v['working_directory']
