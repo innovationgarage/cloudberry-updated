@@ -13,7 +13,7 @@ class TestPackageMangerMethods(unittest.TestCase):
 {
     "version": "0.0.1",
     "update_interval": "10",
-    "working_directory": "/var/lib/updated",
+    "working_directory": "/etc/updated",
     "log_file": "/var/log/updated.log",
     "pid_file": "/var/run/updated.pid",
     "package_manager_path": "/bin/opkg"
@@ -23,7 +23,7 @@ class TestPackageMangerMethods(unittest.TestCase):
         self.assertIsNotNone(c)
 
         self.assertEqual(10, c.update_interval)
-        self.assertEqual("/var/lib/updated", c.working_directory)
+        self.assertEqual("/etc/updated", c.working_directory)
         self.assertEqual("/var/log/updated.log", c.log_file)
         self.assertEqual("/var/run/updated.pid", c.pid_file)
         self.assertEqual("0.0.1", c.version)
@@ -42,7 +42,7 @@ class TestPackageMangerMethods(unittest.TestCase):
 {
     "version": "0.0.1",
     "update_interval": "0",
-    "working_directory": "/var/lib/updated",
+    "working_directory": "/etc/updated",
     "log_file": "/var/log/updated.log",
     "pid_file": "/var/run/updated.pid",
     "package_manager_path": "/bin/opkg"
@@ -70,7 +70,7 @@ class TestPackageMangerMethods(unittest.TestCase):
         # Test valid configuration
         c = Configuration.useUCI('./configs/example_updated_config_no_comment.uci')
         self.assertEqual("10", c.update_interval)
-        self.assertEqual("/var/lib/updated", c.working_directory)
+        self.assertEqual("/etc/updated", c.working_directory)
         self.assertEqual("/var/log/updated.log", c.log_file)
         self.assertEqual("/var/run/updated.pid", c.pid_file)
         self.assertEqual("0.0.1", c.version)
@@ -78,7 +78,7 @@ class TestPackageMangerMethods(unittest.TestCase):
         # Test valid configuration with comment
         c = Configuration.useUCI('./configs/example_updated_config.uci')
         self.assertEqual("10", c.update_interval)
-        self.assertEqual("/var/lib/updated", c.working_directory)
+        self.assertEqual("/etc/updated", c.working_directory)
         self.assertEqual("/var/log/updated.log", c.log_file)
         self.assertEqual("/var/run/updated.pid", c.pid_file)
         self.assertEqual("0.0.1", c.version)

@@ -6,17 +6,15 @@ The internal configuration for the daemon is vanilla JSON.
 import errno
 import json
 import os
-from collections import OrderedDict
 
 import netjsonconfig
 
 import util
 import version
-import package_manager
 
 
 class Configuration:
-    def __init__(self, conf=None, update_interval=10, working_directory="/var/lib/updated",
+    def __init__(self, conf=None, update_interval=10, working_directory="/etc/updated",
                  log_file="/var/log/updated.log", pid_file="/var/run/updated.pid") -> None:
         if conf:
             try:
@@ -82,7 +80,7 @@ class Configuration:
 
         """
         try:
-            util.create_working_directory("/var/lib/updated")
+            util.create_working_directory("/etc/updated")
             c = Configuration()
             with open(config_path, 'w') as outfile:
                 json.dump(c.to_json(), outfile)

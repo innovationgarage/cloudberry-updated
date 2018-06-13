@@ -19,7 +19,7 @@ configuration file has the following structure
 
     config updated
         option update_interval '10'
-        option working_directory '/var/lib/updated'
+        option working_directory '/etc/updated'
         option log_file '/var/log/updated.log'
         option pid_file '/var/run/updated.pid'
         option version '0.0.1'
