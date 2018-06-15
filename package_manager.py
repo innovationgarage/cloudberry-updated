@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 import subprocess
 
+import netjsonconfig
+
 import util
 
 """
@@ -17,7 +19,6 @@ class PackageManager:
     def dry_run(self, prefix: str, packages: []):
         """
        Return a valid command
-        :param package_manager_path:
        :param prefix:
        :param packages:
        :return:
@@ -57,10 +58,10 @@ class PackageManager:
             if len(line.strip()) == 0:
                 continue
             # Only split by first dash, version number could use a dash later
-            l = line.split("-", 1)
-            if len(l) < 2:
-                util.log("Invalid package list, expecting format (package - version), but got ".format(l))
-            packages[l[0].strip()] = l[1].strip()
+            package_info = line.split("-", 1)
+            if len(package_info) < 2:
+                util.log("Invalid package list, expecting format (package - version), but got ".format(package_info))
+            packages[package_info[0].strip()] = package_info[1].strip()
 
         return packages
 
@@ -69,3 +70,16 @@ class PackageManager:
         util.log("exec: {}".format(prompt))
         p = subprocess.run(prompt.split(" "), stderr=stdout, stdout=subprocess.PIPE)
         return self.list_installed_to_dict(p.stdout.decode('utf-8'))
+
+    @staticmethod
+    def load_local_packages_list(path):
+        # Only get the packages from the UCI file
+        config_file = open(path, 'r').read()
+        parser = netjsonconfig.OpenWrt.parser(config=config_file)
+        data = parser.parse_text(config=config_file)
+        v = data["\'updated\'"][0]
+        packages = {}
+        for k in v:
+            if k != ".name" and k != ".type":
+                packages[k] = v[k]
+        return packages

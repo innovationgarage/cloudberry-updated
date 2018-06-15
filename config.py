@@ -10,13 +10,17 @@ import os
 import netjsonconfig
 
 import util
-import version
 
 
 class Configuration:
 
     def __init__(self) -> None:
+        self.package_manager_path = "/bin/opkg"
         self.version = "0.0.1"
+        self.update_interval = 10
+        self.working_directory = "/etc/updated"
+        self.log_file = "/var/log/updated.log"
+        self.pid_file = "/var/run/updated.pid"
 
     @classmethod
     def load(cls, config_path):

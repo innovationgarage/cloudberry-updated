@@ -16,6 +16,7 @@ from config import Configuration
 
 class Manager:
     our_packages = {}
+    packages_path = "/etc/updated/packages"
 
     def __init__(self, config_path: str) -> None:
         super().__init__()
@@ -24,7 +25,6 @@ class Manager:
         if not self.config:
             util.log("Error found no configuration")
             exit(1)
-        self.config.package_manager_path = "/bin/opkg"
         self.pm = package_manager.PackageManager(self.config.package_manager_path)
         if not self.config or not self.config.isValid():
             util.log("Error invalid configuration")
@@ -60,6 +60,7 @@ class Manager:
         :return: new configured update daemon.
         """
         util.create_working_directory(self.config.working_directory)
+        self.packages_path = os.path.join(self.config.working_directory, "packages")
         try:
             sys.stdout = open(self.config.log_file, 'w+')
             util.log("Setting up daemon")
@@ -71,7 +72,7 @@ class Manager:
             self.remove_pid_file()
             exit(errno.EPERM)
         self.write_pid_file()
-        self.load_packages_list()
+        self.pm.load_local_packages_list(self.packages_path)
 
     def start(self):
         """
@@ -90,11 +91,11 @@ class Manager:
             time.sleep(self.config.update_interval * 1)
 
             # TODO: optimize and only load on changes event
-            self.load_packages_list()
+            self.pm.load_local_packages_list(self.packages_path)
             installed_packages = self.pm.run_list_installed(stdout=sys.stdout)
             if len(installed_packages) != 0:
                 for key in self.our_packages:
-                    if not key in installed_packages:
+                    if key not in installed_packages:
                         util.log("KEY={}".format(key))
                         exit_code = self.pm.run_install(packages=[key], stdout=sys.stdout)
                         if exit_code != 0:
@@ -127,12 +128,3 @@ class Manager:
         """
         pid_file = open(self.config.pid_file, "w")
         pid_file.write(str(os.getpid()))
-
-    def load_packages_list(self):
-        path = os.path.join(self.config.working_directory, "packages")
-        packages_file = open(path, "r")
-        contents = packages_file.read()
-        if len(contents) == 0:
-            util.log("Warning empty packages file at ".format(path))
-            return
-        self.our_packages = self.pm.list_installed_to_dict(contents)

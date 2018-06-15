@@ -1,0 +1,5 @@
+package 'updated'
+
+config 'packages'
+   option nano 2.7.5-1
+   option opkg 2017-03-23-1d0263bb-1

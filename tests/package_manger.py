@@ -12,7 +12,7 @@ class TestPackageMangerMethods(unittest.TestCase):
 
     def setUp(self):
         super().setUp()
-        self.config = Configuration.load("./tmp-config.json")
+        self.config = Configuration.load("./configs/example_updated_config.uci")
         self.pm = PackageManager(self.config.package_manager_path)
 
     def test_install(self):
@@ -81,6 +81,11 @@ opkg - 2017-03-23-1d0263bb-1
         expected = {'nano': '2.7.5-1', 'opkg': '2017-03-23-1d0263bb-1'}
         actual = self.pm.list_installed_to_dict(opkg_output)
 
+        self.assertEqual(expected, actual)
+
+    def test_local_install_format(self):
+        expected = {'nano': '2.7.5-1', 'opkg': '2017-03-23-1d0263bb-1'}
+        actual = self.pm.load_local_packages_list("./configs/packages")
         self.assertEqual(expected, actual)
 
 
