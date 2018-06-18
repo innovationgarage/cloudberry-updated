@@ -95,12 +95,13 @@ class Manager:
                     util.log("Checking for {} in installed list".format(key))
                     if key not in installed_packages:
                         self.pm.update(stdout=sys.stdout)
-                        exit_code = self.pm.run_install(packages=[key], stdout=sys.stdout)
+                        # TODO: What todo when there is a version mismatch?
+                        # pkg = "{}={}".format(key, self.our_packages[key])
+                        pkg = key
+                        exit_code = self.pm.run_install(packages=[pkg], stdout=sys.stdout)
                         if exit_code != 0:
                             util.log("Error: Got bad exit({}) while installing {}".format(exit_code, key))
 
-            # TODO: check for package changes.
-            # TODO: What todo when there is a version mismatch?
             # TODO: check OpenWisp feed file and if does not match /etc/opkg/customfeeds.conf
 
     def cleanup(self, signum, frame):
