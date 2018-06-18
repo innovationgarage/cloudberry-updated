@@ -91,10 +91,11 @@ class Manager:
             time.sleep(self.config.update_interval * 1)
 
             # TODO: optimize and only load on changes event
-            self.pm.load_local_packages_list(self.packages_path)
+            our_packages = self.pm.load_local_packages_list(self.packages_path)
             installed_packages = self.pm.run_list_installed(stdout=sys.stdout)
             if len(installed_packages) != 0:
-                for key in self.our_packages:
+                for key in our_packages:
+                    util.log("Checking for {} in installed list".format(key))
                     if key not in installed_packages:
                         util.log("KEY={}".format(key))
                         exit_code = self.pm.run_install(packages=[key], stdout=sys.stdout)
