@@ -43,11 +43,11 @@ TODO: add feeds section
 
 
     # Start the daemon
-    ./updated
+    ./updated &
 
     # Stop the daemon
     ./updated --action stop
 
     # Restart the daemon
-    ./updated --action restart
+    ./updated --action restart &
 
