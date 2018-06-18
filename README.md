@@ -25,8 +25,19 @@ configuration file has the following structure
         option version '0.0.1'
         
 The daemon section has all of the configuration specific for how updated is
-supposed to run.  The feeds section has a list off all the custom feeds and
-packages shows the packages to be installed.
+supposed to run.
+
+In the working directory `/etc/updated`, the packages file tells updated what to install.
+
+        # /etc/updated/packages
+        package 'updated'
+
+            config 'packages'
+                option nano 2.7.5-1
+                option opkg 2017-03-23-1d0263bb-1
+
+
+TODO: add feeds section
   
 ### Usage
 
