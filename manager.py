@@ -13,11 +13,11 @@ from config import Configuration
 
 class Manager:
     our_packages = {}
+    cached_packages_timestamp = None
     packages_path = "/etc/updated/packages"
 
     def __init__(self, config_path: str) -> None:
         super().__init__()
-
         self.config = Configuration.load(config_path)
         if not self.config:
             util.log("Error found no configuration")
@@ -87,11 +87,11 @@ class Manager:
             util.log("{}: :)".format(datetime.datetime.now()))
             time.sleep(self.config.update_interval * 1)
 
-            # TODO: optimize and only load on changes event
-            our_packages = self.pm.load_local_packages_list(self.packages_path)
+            self.load_local_packages_list()
+
             installed_packages = self.pm.run_list_installed(stdout=sys.stdout)
             if len(installed_packages) != 0:
-                for key in our_packages:
+                for key in self.our_packages:
                     util.log("Checking for {} in installed list".format(key))
                     if key not in installed_packages:
                         self.pm.update(stdout=sys.stdout)
@@ -125,3 +125,14 @@ class Manager:
         """
         pid_file = open(self.config.pid_file, "w")
         pid_file.write(str(os.getpid()))
+
+    def load_local_packages_list(self):
+        """
+        Poll the filesystem to detect changes to the packages file.
+        :return:
+        """
+        stamp = os.stat(self.packages_path).st_mtime
+        if stamp != self.cached_packages_timestamp:
+            print("Reloading packages from filesystem")
+            self.cached_packages_timestamp = stamp
+            self.our_packages = self.pm.load_local_packages_list(self.packages_path)
