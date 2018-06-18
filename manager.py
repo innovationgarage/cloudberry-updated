@@ -11,9 +11,6 @@ import util
 from config import Configuration
 
 
-# TODO: handle stale pid
-
-
 class Manager:
     our_packages = {}
     packages_path = "/etc/updated/packages"

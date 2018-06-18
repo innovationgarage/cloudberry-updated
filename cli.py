@@ -15,5 +15,4 @@ def run():
         """.format(version.CURRENT))
     parser.add_argument('--action', help='{ start | stop | restart } the daemon', default='start')
     parser.add_argument('--config', help='Path to the daemon configuration', default='/etc/config/updated')
-    # TODO: make pid path configurable
     return parser.parse_args()
