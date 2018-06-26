@@ -92,7 +92,7 @@ opkg - 2017-03-23-1d0263bb-1
         expected = ["src/gz innovationgarage https://openwrt.innovationgarage.no/packages/arm_cortex-a7_neon-vfpv4/packages/"]
         actual = self.pm.load_local_feeds_list("./configs/customfeeds")
 
-        print(actual,"\n", expected)
+        print(actual, "\n", expected)
         self.assertEqual(expected, actual)
 
 

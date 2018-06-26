@@ -84,7 +84,8 @@ class PackageManager:
                 packages[k] = v[k]
         return packages
 
-    def load_local_feeds_list(self, path):
+    @staticmethod
+    def load_local_feeds_list(path):
         config_file = open(path, 'r').read()
         parser = netjsonconfig.OpenWrt.parser(config=config_file)
         data = parser.parse_text(config=config_file)
