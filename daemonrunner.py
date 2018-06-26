@@ -12,7 +12,7 @@ import util
 from config import Configuration
 
 
-class Manager:
+class DaemonRunner:
     our_packages = {}
     cached_packages_timestamp = None
     packages_path = "/etc/updated/packages"

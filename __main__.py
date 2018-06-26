@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
 
 import cli
-import manager
+import daemonrunner
 
 
 def main(args):
     action = args.action
-    m = manager.Manager(args.config)
+    m = daemonrunner.DaemonRunner(args.config)
     try:
         if action == "stop":
             m.stop()
