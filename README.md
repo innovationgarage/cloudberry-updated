@@ -35,6 +35,13 @@ In the working directory `/etc/updated`, the packages file tells updated what to
             config 'packages'
                 option nano 2.7.5-1
                 option opkg 2017-03-23-1d0263bb-1
+                
+        # /etc/updated/customfeeds
+        package 'updated'
+
+        config 'customfeeds'
+            option 'innovationgarage' 'https://openwrt.innovationgarage.no/packages/arm_cortex-a7_neon-vfpv4/packages/'
+
 
 
 TODO: add feeds section

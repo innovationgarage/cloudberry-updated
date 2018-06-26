@@ -1,0 +1,4 @@
+package 'updated'
+
+config 'customfeeds'
+        option 'innovationgarage' 'https://openwrt.innovationgarage.no/packages/arm_cortex-a7_neon-vfpv4/packages/'

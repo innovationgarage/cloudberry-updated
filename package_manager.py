@@ -83,3 +83,16 @@ class PackageManager:
             if k != ".name" and k != ".type":
                 packages[k] = v[k]
         return packages
+
+    def load_local_feeds_list(self, path):
+        config_file = open(path, 'r').read()
+        parser = netjsonconfig.OpenWrt.parser(config=config_file)
+        data = parser.parse_text(config=config_file)
+        v = data["\'updated\'"][0]
+
+        feeds = []
+        for k in v:
+            val = v[k]
+            if "http" in val:
+                feeds.append("src/gz {} {}".format(k, val))
+        return feeds

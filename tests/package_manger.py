@@ -88,6 +88,13 @@ opkg - 2017-03-23-1d0263bb-1
         actual = self.pm.load_local_packages_list("./configs/packages")
         self.assertEqual(expected, actual)
 
+    def test_reading_customfeeds(self):
+        expected = ["src/gz innovationgarage https://openwrt.innovationgarage.no/packages/arm_cortex-a7_neon-vfpv4/packages/"]
+        actual = self.pm.load_local_feeds_list("./configs/customfeeds")
+
+        print(actual,"\n", expected)
+        self.assertEqual(expected, actual)
+
 
 if __name__ == '__main__':
     unittest.main()

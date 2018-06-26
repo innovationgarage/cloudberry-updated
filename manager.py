@@ -2,6 +2,7 @@
 import datetime
 import errno
 import os
+import shutil
 import signal
 import sys
 import time
@@ -102,7 +103,7 @@ class Manager:
                         if exit_code != 0:
                             util.log("Error: Got bad exit({}) while installing {}".format(exit_code, key))
 
-            # TODO: check OpenWisp feed file and if does not match /etc/opkg/customfeeds.conf
+            self.handle_custom_feeds()
 
     def cleanup(self, signum, frame):
         """
@@ -134,6 +135,24 @@ class Manager:
         """
         stamp = os.stat(self.packages_path).st_mtime
         if stamp != self.cached_packages_timestamp:
-            print("Reloading packages from filesystem")
+            util.log("Reloading packages from filesystem")
             self.cached_packages_timestamp = stamp
             self.our_packages = self.pm.load_local_packages_list(self.packages_path)
+
+    def handle_custom_feeds(self):
+        feeds_path = os.path.join(self.config.working_directory, "customfeeds")
+        opkg_feed_path = "/etc/opkg/customfeeds.conf"
+        try:
+            feeds = self.pm.load_local_feeds_list(feeds_path)
+            feeds_content = "\n".join(feeds)
+            opkg_content = open(opkg_feed_path, "r").read()
+            if feeds_content != opkg_content:
+                tmp_path = os.path.join(self.config.working_directory, "customfeeds.tmp")
+                util.log("Info: Updating the opkg feed")
+                f = open(tmp_path, "w")
+                f.write(feeds_content)
+                f.close()
+                shutil.copy(tmp_path, opkg_feed_path)
+                os.remove(tmp_path)
+        except IOError as e:
+            util.log("Info: skipping updating {}. Got {}".format(opkg_feed_path, e))
