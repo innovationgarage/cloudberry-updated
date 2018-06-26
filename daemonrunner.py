@@ -87,22 +87,7 @@ class DaemonRunner:
             sys.stdout.flush()
             util.log("{}: :)".format(datetime.datetime.now()))
             time.sleep(self.config.update_interval * 1)
-
-            self.load_local_packages_list()
-
-            installed_packages = self.pm.run_list_installed(stdout=sys.stdout)
-            if len(installed_packages) != 0:
-                for key in self.our_packages:
-                    util.log("Checking for {} in installed list".format(key))
-                    if key not in installed_packages:
-                        self.pm.update(stdout=sys.stdout)
-                        # TODO: What todo when there is a version mismatch?
-                        # pkg = "{}={}".format(key, self.our_packages[key])
-                        pkg = key
-                        exit_code = self.pm.run_install(packages=[pkg], stdout=sys.stdout)
-                        if exit_code != 0:
-                            util.log("Error: Got bad exit({}) while installing {}".format(exit_code, key))
-
+            self.handle_packages()
             self.handle_custom_feeds()
 
     def cleanup(self, signum, frame):
@@ -156,3 +141,18 @@ class DaemonRunner:
                 os.remove(tmp_path)
         except IOError as e:
             util.log("Info: skipping updating {}. Got {}".format(opkg_feed_path, e))
+
+    def handle_packages(self):
+        self.load_local_packages_list()
+        installed_packages = self.pm.run_list_installed(stdout=sys.stdout)
+        if len(installed_packages) != 0:
+            for key in self.our_packages:
+                util.log("Checking for {} in installed list".format(key))
+                if key not in installed_packages:
+                    self.pm.update(stdout=sys.stdout)
+                    # TODO: What todo when there is a version mismatch?
+                    # pkg = "{}={}".format(key, self.our_packages[key])
+                    pkg = key
+                    exit_code = self.pm.run_install(packages=[pkg], stdout=sys.stdout)
+                    if exit_code != 0:
+                        util.log("Error: Got bad exit({}) while installing {}".format(exit_code, key))
