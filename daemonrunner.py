@@ -86,7 +86,7 @@ class DaemonRunner:
         while True:
             sys.stdout.flush()
             util.log("{}: :)".format(datetime.datetime.now()))
-            time.sleep(self.config.update_interval * 1)
+            time.sleep(self.config.update_interval * 60)
             self.handle_packages()
             self.handle_custom_feeds()
 
